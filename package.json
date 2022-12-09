@@ -1,0 +1,9 @@
+{
+  "name": "lispy",
+  "version": "0.0.1",
+  "description": "An itsy bitsy lisp-y",
+  "main": "index.js",
+  "author": "elielamora <elielamora@gmail.com>",
+  "license": "MIT",
+  "private": true
+}
