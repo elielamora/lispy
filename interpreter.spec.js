@@ -24,3 +24,7 @@ it("multiplies expressions", () => {
 it("can declare variables", () => {
   expect(new Expr("(let x 42 x)").eval()).toEqual(42);
 });
+
+it("can set variables to result of expression", () => {
+  expect(new Expr("(let hello (add 42 0) hello)").eval()).toEqual(42);
+});

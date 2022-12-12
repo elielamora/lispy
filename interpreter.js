@@ -89,7 +89,9 @@ function evaluate(exp, env) {
     } else if (fun === "mult") {
       return evaluate(exp[1], env) * evaluate(exp[2], env);
     } else if (fun === "let") {
-      return evaluate(exp[3], new Env(exp[1], exp[2], env));
+      const sym = exp[1];
+      const val = evaluate(exp[2], env);
+      return evaluate(exp[3], new Env(sym, val, env));
     }
   } else if (typeof exp === 'string') {
     return env.valueOf(exp);
