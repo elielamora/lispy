@@ -17,12 +17,12 @@ class Expr {
       const c = this.current;
       const begin = this.index;
       if (isDigit(c)) {
-        console.log('is digit')
         args.push(this.parseDigit());
       } else if (c == "(") {
         this.index++;
         args.push(this.parse());
       } else if (c == ")") {
+        this.index++;
         break;
       } else if (c == " ") {
         this.index++;
@@ -38,7 +38,6 @@ class Expr {
   }
 
   parseSymbol() {
-    console.log('parse symbol');
     const start = this.index;
     while (this.remaining && this.current != " " && this.current != ")" && this.current != "(") {
       this.index++;
@@ -62,16 +61,20 @@ class Expr {
     if (this.args.length !== 1) {
       throw new Error('invalid lispy expression')
     }
-    const exp = this.args[0];
-    if (typeof(exp) === 'number') {
-      return exp;
-    } else if (typeof(exp) === 'object' && exp.length) {
-      if (exp[0] === 'add') {
-        return exp[1] + exp[2];
-      }
-    }
-    throw new Error(`invalid expression (${exp.args.join(' ')})`);
+    return evaluate(this.args[0]);
   }
+}
+
+function evaluate(exp) {
+  if (typeof(exp) === 'number') {
+    return exp;
+  } else if (typeof(exp) === 'object' && exp.length) {
+    console.log(exp)
+    if (exp[0] === 'add') {
+      return evaluate(exp[1]) + evaluate(exp[2]);
+    }
+  }
+  throw new Error(`invalid expression (${exp})`);
 }
 
 function isDigit(c) {
