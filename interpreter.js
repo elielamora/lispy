@@ -5,11 +5,17 @@ class Expr {
     this.args = this.parse();
   }
 
-  get current() { return this.charAt(this.index); }
+  get current() {
+    return this.charAt(this.index);
+  }
 
-  get length() { return this.s.length; }
+  get length() {
+    return this.s.length;
+  }
 
-  get remaining() { return this.index < this.length; }
+  get remaining() {
+    return this.index < this.length;
+  }
 
   parse() {
     const args = [];
@@ -31,7 +37,9 @@ class Expr {
       }
       const end = this.index;
       if (begin == end) {
-        throw new Error(`scan position did not advance stuck at ${begin} = '${this.current}'`);
+        throw new Error(
+          `scan position did not advance stuck at ${begin} = '${this.current}'`
+        );
       }
     }
     return args;
@@ -39,7 +47,12 @@ class Expr {
 
   parseSymbol() {
     const start = this.index;
-    while (this.remaining && this.current != " " && this.current != ")" && this.current != "(") {
+    while (
+      this.remaining &&
+      this.current != " " &&
+      this.current != ")" &&
+      this.current != "("
+    ) {
       this.index++;
     }
     return this.s.substring(start, this.index);
@@ -59,19 +72,22 @@ class Expr {
 
   eval() {
     if (this.args.length !== 1) {
-      throw new Error('invalid lispy expression')
+      throw new Error("invalid lispy expression");
     }
     return evaluate(this.args[0]);
   }
 }
 
 function evaluate(exp) {
-  if (typeof(exp) === 'number') {
+  if (typeof exp === "number") {
     return exp;
-  } else if (typeof(exp) === 'object' && exp.length) {
-    console.log(exp)
-    if (exp[0] === 'add') {
+  } else if (typeof exp === "object" && exp.length) {
+    console.log(exp);
+    if (exp[0] === "add") {
       return evaluate(exp[1]) + evaluate(exp[2]);
+    }
+    if (exp[0] === "mult") {
+      return evaluate(exp[1]) * evaluate(exp[2]);
     }
   }
   throw new Error(`invalid expression (${exp})`);
