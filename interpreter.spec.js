@@ -20,3 +20,7 @@ it("multiplies expressions", () => {
   expect(new Expr("(mult (mult 2 7) 3)").eval()).toEqual(42);
   expect(new Expr("(mult (mult 1 7) (mult 2 3))").eval()).toEqual(42);
 });
+
+it("can declare variables", () => {
+  expect(new Expr("(let x 42 x)").eval()).toEqual(42);
+});

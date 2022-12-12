@@ -78,19 +78,42 @@ class Expr {
   }
 }
 
-function evaluate(exp) {
+function evaluate(exp, env) {
   if (typeof exp === "number") {
     return exp;
   } else if (typeof exp === "object" && exp.length) {
     console.log(exp);
-    if (exp[0] === "add") {
-      return evaluate(exp[1]) + evaluate(exp[2]);
+    const fun = exp[0];
+    if (fun === "add") {
+      return evaluate(exp[1], env) + evaluate(exp[2], env);
+    } else if (fun === "mult") {
+      return evaluate(exp[1], env) * evaluate(exp[2], env);
+    } else if (fun === "let") {
+      return evaluate(exp[3], new Env(exp[1], exp[2], env));
     }
-    if (exp[0] === "mult") {
-      return evaluate(exp[1]) * evaluate(exp[2]);
-    }
+  } else if (typeof exp === 'string') {
+    return env.valueOf(exp);
   }
   throw new Error(`invalid expression (${exp})`);
+}
+
+class Env {
+  constructor(sym, val, next) {
+    this.sym = sym;
+    this.val = val;
+    this.next = next;
+  }
+
+  valueOf(sym) {
+    let env = this;
+    while(env) {
+      if (env.sym === sym) {
+        return this.val;
+      }
+      env = env.next;
+    }
+    throw new Error(`symbol ${sym} was not found in env`);
+  }
 }
 
 function isDigit(c) {
