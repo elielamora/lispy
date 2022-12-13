@@ -82,18 +82,27 @@ function evaluate(exp, env) {
   if (typeof exp === "number") {
     return exp;
   } else if (typeof exp === "object" && exp.length) {
-    console.log(exp);
     const fun = exp[0];
     if (fun === "add") {
       return evaluate(exp[1], env) + evaluate(exp[2], env);
     } else if (fun === "mult") {
       return evaluate(exp[1], env) * evaluate(exp[2], env);
     } else if (fun === "let") {
-      const sym = exp[1];
-      const val = evaluate(exp[2], env);
-      return evaluate(exp[3], new Env(sym, val, env));
+      if (exp.length < 4 || exp.length % 2 !== 0) {
+        throw new Error(`invalid argument count (${exp.length})`);
+      }
+      let newEnv = env;
+      for (let i = 1; i < exp.length - 1; i += 2) {
+        const sym = exp[i];
+        const val = evaluate(exp[i + 1], newEnv);
+        newEnv = new Env(sym, val, newEnv);
+      }
+      return evaluate(exp[exp.length - 1], newEnv);
     }
-  } else if (typeof exp === 'string') {
+  } else if (typeof exp === "string") {
+    if (!env) {
+      throw new Error("symbol is undefined");
+    }
     return env.valueOf(exp);
   }
   throw new Error(`invalid expression (${exp})`);
@@ -108,9 +117,9 @@ class Env {
 
   valueOf(sym) {
     let env = this;
-    while(env) {
+    while (env) {
       if (env.sym === sym) {
-        return this.val;
+        return env.val;
       }
       env = env.next;
     }

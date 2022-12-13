@@ -28,3 +28,11 @@ it("can declare variables", () => {
 it("can set variables to result of expression", () => {
   expect(new Expr("(let hello (add 42 0) hello)").eval()).toEqual(42);
 });
+
+it("evaluates nested let statements and shadows", () => {
+  expect(new Expr("(let x 41 (let x 42 x))").eval()).toEqual(42);
+});
+
+it("assignes multiple variables in a single let expression", () => {
+  expect(new Expr("(let x 41 y 42 y)").eval()).toEqual(42);
+});
