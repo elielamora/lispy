@@ -36,3 +36,19 @@ it("evaluates nested let statements and shadows", () => {
 it("assignes multiple variables in a single let expression", () => {
   expect(new Expr("(let x 41 y 42 y)").eval()).toEqual(42);
 });
+
+it("performs complex expression evaluation supporting new lines", () => {
+  expect(
+    new Expr(`
+    (let x 3 y 4
+      (add 2
+        (mult 5
+          (let x y
+            (add x x)
+          )
+        )
+      )
+    )
+  `).eval()
+  ).toEqual(42);
+});

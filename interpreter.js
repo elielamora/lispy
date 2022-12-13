@@ -30,7 +30,7 @@ class Expr {
       } else if (c == ")") {
         this.index++;
         break;
-      } else if (c == " ") {
+      } else if (isWhitespace(c)) {
         this.index++;
       } else {
         args.push(this.parseSymbol());
@@ -49,7 +49,7 @@ class Expr {
     const start = this.index;
     while (
       this.remaining &&
-      this.current != " " &&
+      !isWhitespace(this.current) &&
       this.current != ")" &&
       this.current != "("
     ) {
@@ -123,13 +123,34 @@ class Env {
       }
       env = env.next;
     }
-    throw new Error(`symbol ${sym} was not found in env`);
+    throw new Error(`symbol '${sym}' was not found in env ${this.toString()}`);
+  }
+
+  toString() {
+    return JSON.stringify(this.symbolTable());
+  }
+
+  symbolTable() {
+    const symbolTable = {};
+    let env = this;
+    while (env) {
+      if (symbolTable[env.sym]) {
+        continue;
+      }
+      symbolTable[env.sym] = env.val;
+      env = env.next;
+    }
+    return symbolTable;
   }
 }
 
 function isDigit(c) {
   const val = c.charCodeAt(0);
   return "0".charCodeAt(0) <= val && val <= "9".charCodeAt(0);
+}
+
+function isWhitespace(c) {
+  return c === " " || c === "\n" || c === "\t";
 }
 
 module.exports = {
