@@ -2,6 +2,7 @@
 
 const process = require("process");
 const readline = require("readline");
+const { Expr } = require("./interpreter");
 
 function repl() {
   const rl = readline.createInterface({
@@ -24,8 +25,11 @@ function repl() {
 }
 
 function evalExpr(line) {
-  // TODO: implement evalExpr
-  return line;
+  try {
+    return new Expr(line).eval();
+  } catch (error) {
+    return error.message || error.toString();
+  }
 }
 
 module.exports = function main(args) {

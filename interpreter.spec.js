@@ -52,3 +52,14 @@ it("performs complex expression evaluation supporting new lines", () => {
   `).eval()
   ).toEqual(42);
 });
+
+it("define functions", () => {
+  expect(
+    new Expr(`
+    (def square (x)
+      (mult x x)
+    )
+    (square 42)
+  `).eval()
+  ).toEqual(1764);
+});
