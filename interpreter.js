@@ -1,5 +1,5 @@
 function interpret(exp) {
-  return evaluate(parse(exp))[0];
+  // todo: write implementation here.
 }
 
 module.exports = {
